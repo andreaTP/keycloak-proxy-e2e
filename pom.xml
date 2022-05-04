@@ -4,97 +4,54 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.keycloak</groupId>
-  <artifactId>check-junit-extension</artifactId>
+  <artifactId>keycloak-proxy-e2e-test</artifactId>
   <name>check-junit-extension</name>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
-    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <surefire-plugin.version>3.0.0-M6</surefire-plugin.version>
+
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-sdk.version>3.0.7</quarkus-sdk.version>
-    <quarkus.version>2.7.5.Final</quarkus.version>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.quarkiverse.operatorsdk</groupId>
-        <artifactId>quarkus-operator-sdk-bom</artifactId>
-        <version>${quarkus-sdk.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>io.quarkiverse.operatorsdk</groupId>
-      <artifactId>quarkus-operator-sdk</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.36</version>
+    </dependency>
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.11</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
-      <artifactId>crd-generator-apt</artifactId>
+      <artifactId>kubernetes-client</artifactId>
       <version>5.12.2</version>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-test-common</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.8.2</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.javaoperatorsdk</groupId>
-      <artifactId>operator-framework-junit-5</artifactId>
-      <version>2.1.4</version>
-      <scope>test</scope>
-    </dependency>
+  </dependency>
   </dependencies>
 
   <build>
       <plugins>
         <plugin>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-maven-plugin</artifactId>
-          <version>${quarkus.version}</version>
-          <extensions>true</extensions>
-          <executions>
-            <execution>
-              <goals>
-                <goal>build</goal>
-                <goal>generate-code</goal>
-                <goal>generate-code-tests</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${compiler-plugin.version}</version>
-          <configuration>
-            <compilerArgs>
-              <arg>-parameters</arg>
-            </compilerArgs>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire-plugin.version}</version>
-          <configuration>
-            <systemPropertyVariables>
-              <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-              <maven.home>${maven.home}</maven.home>
-            </systemPropertyVariables>
-          </configuration>
         </plugin>
       </plugins>
   </build>

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-test-kc
+spec:
+  selector:
+    matchLabels:
+      app: proxy-test-keycloak
+  template:
+    metadata:
+      labels:
+        app: proxy-test-keycloak
+    spec:
+      containers:
+        - image: quay.io/keycloak/keycloak:18.0.0
+          imagePullPolicy: Always
+          name: keycloak
+          env:
+            - name: KC_DB
+              value: "dev-mem"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: password
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+              value: "false"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - --head
+                - --fail
+                - --silent
+                - http://127.0.0.1:8080/health/live
+            failureThreshold: 150
+            initialDelaySeconds: 10
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            exec:
+              command:
+                - curl
+                - --head
+                - --fail
+                - --silent
+                - http://127.0.0.1:8080/health/ready
+            failureThreshold: 250
+            initialDelaySeconds: 20
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 1
+      restartPolicy: Always
